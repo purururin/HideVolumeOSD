@@ -27,8 +27,8 @@ jobs:
     - name: Restore NuGet packages
       run: nuget restore HideVolumeOSD.sln
 
-    - name: Build solution
-      run: msbuild HideVolumeOSD.sln /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /p:RestorePackages=true
+    - name: Build project
+      run: msbuild HideVolumeOSD\HideVolumeOSDApp.csproj /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /p:RestorePackages=true
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
