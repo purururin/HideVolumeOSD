@@ -1,18 +1,22 @@
-name: Build HideVolumeOSD
+name: Build
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "main" ]
+    branches: [ "master" ]
 
 jobs:
   build:
     runs-on: windows-latest
 
+    strategy:
+      matrix:
+        platform: [x86, x64]
+        configuration: [Release]
+
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
@@ -20,16 +24,15 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
 
-    - name: Restore NuGet Packages
+    - name: Restore NuGet packages
       run: nuget restore HideVolumeOSD.sln
 
-- name: Build Project
-      run: |
-        msbuild HideVolumeOSD/HideVolumeOSDApp.csproj /p:Configuration=Release /p:Platform="AnyCPU"
+    - name: Build solution
+      run: msbuild HideVolumeOSD.sln /p:Configuration=${{ matrix.configuration }} /p:Platform=${{ matrix.platform }} /p:RestorePackages=true
 
-    - name: Upload Artifact
+    - name: Upload build artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: HideVolumeOSD-Binary
-        path: |
-          **/bin/Release/
+        name: HideVolumeOSD-${{ matrix.platform }}-${{ matrix.configuration }}
+        path: ${{ matrix.platform }}/${{ matrix.configuration }}/
+        if-no-files-found: error
