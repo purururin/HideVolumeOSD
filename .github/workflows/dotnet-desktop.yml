@@ -23,9 +23,9 @@ jobs:
     - name: Restore NuGet Packages
       run: nuget restore HideVolumeOSD.sln
 
-    - name: Build Solution
+- name: Build Project
       run: |
-        msbuild HideVolumeOSD.sln /p:Configuration=Release /p:Platform="Any CPU"
+        msbuild HideVolumeOSD/HideVolumeOSDApp.csproj /p:Configuration=Release /p:Platform="AnyCPU"
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
